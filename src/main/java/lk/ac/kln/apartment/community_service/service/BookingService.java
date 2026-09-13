@@ -72,6 +72,44 @@ public class BookingService {
         return mapToResponse(saved);
     }
 
+    public BookingResponse updateBookingStatus(Long bookingId, BookingStatus newStatus) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Booking not found"));
+
+        // Rule: only PENDING bookings can be approved or rejected
+        if ((newStatus == BookingStatus.APPROVED || newStatus == BookingStatus.REJECTED)
+                && booking.getStatus() != BookingStatus.PENDING) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Only PENDING bookings can be approved or rejected");
+        }
+
+        // Rule: if approving, re-check for conflicts (in case another booking
+        // for the same slot got approved in the meantime)
+        if (newStatus == BookingStatus.APPROVED) {
+            List<Booking> overlapping = bookingRepository
+                    .findByFacilityIdAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
+                            booking.getFacility().getId(),
+                            BookingStatus.APPROVED,
+                            booking.getEndTime(),
+                            booking.getStartTime()
+                    );
+
+            if (!overlapping.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Cannot approve — this time slot now conflicts with another approved booking");
+            }
+        }
+
+        booking.setStatus(newStatus);
+        Booking saved = bookingRepository.save(booking);
+
+        return mapToResponse(saved);
+    }
+
     private BookingResponse mapToResponse(Booking booking) {
         return new BookingResponse(
                 booking.getId(),
