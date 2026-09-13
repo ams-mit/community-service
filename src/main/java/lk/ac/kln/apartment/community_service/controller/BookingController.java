@@ -2,6 +2,7 @@ package lk.ac.kln.apartment.community_service.controller;
 
 import lk.ac.kln.apartment.community_service.dto.BookingRequest;
 import lk.ac.kln.apartment.community_service.dto.BookingResponse;
+import lk.ac.kln.apartment.community_service.dto.BookingStatusUpdateRequest;
 import lk.ac.kln.apartment.community_service.service.BookingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,5 +21,12 @@ public class BookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponse createBooking(@RequestBody BookingRequest request) {
         return bookingService.createBooking(request);
+    }
+
+    @PatchMapping("/{bookingId}/status")
+    public BookingResponse updateBookingStatus(
+            @PathVariable Long bookingId,
+            @RequestBody BookingStatusUpdateRequest request) {
+        return bookingService.updateBookingStatus(bookingId, request.getStatus());
     }
 }
