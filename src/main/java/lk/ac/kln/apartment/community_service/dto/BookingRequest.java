@@ -15,9 +15,25 @@ public class BookingRequest {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    // Temporary fields — these will normally come from the verified JWT,
-    // not from the request body. We use them here only until the
-    // security filter is built. Remove once JWT parsing is added.
+    // Requester info
     private String requesterId;
     private String requesterRole;
+    private String requesterName;
+    private String unitId;
+
+    // Additional booking details
+    private String purpose;
+    private Integer attendeeCount;
+
+    // Staff booking on behalf
+    private String bookedByStaffId;
+    private String bookedByStaffName;
+
+    public BookingRequest(Long facilityId, LocalDateTime startTime, LocalDateTime endTime, String requesterId, String requesterRole) {
+        this.facilityId = facilityId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.requesterId = requesterId;
+        this.requesterRole = requesterRole;
+    }
 }

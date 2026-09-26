@@ -17,6 +17,13 @@ public class BookingResponse {
     private String facilityName;
     private String requesterId;
     private String requesterRole;
+    private String requesterName;
+    private String unitId;
+    private String purpose;
+    private Integer attendeeCount;
+    private String rejectionReason;
+    private String bookedByStaffId;
+    private String bookedByStaffName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private BookingStatus status;

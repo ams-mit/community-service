@@ -18,5 +18,9 @@ public class AnnouncementResponse {
     private String targetRole;
     private String publishedBy;
     private AnnouncementStatus status;
+    private String category;
+    private String priority;
+    private LocalDateTime expiryDate;
+    private String attachmentUrl;
     private LocalDateTime createdAt;
 }
