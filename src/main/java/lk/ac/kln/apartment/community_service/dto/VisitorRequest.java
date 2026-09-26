@@ -16,4 +16,6 @@ public class VisitorRequest {
     private String unitId;
     private String purpose;
     private LocalDate visitDate;
+    private String visitorPhone;
+    private String vehicleNumber;
 }

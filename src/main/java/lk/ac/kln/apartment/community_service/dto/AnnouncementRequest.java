@@ -15,4 +15,9 @@ public class AnnouncementRequest {
 
     // Temporary — should come from the verified JWT once security is added
     private String publishedBy;
+
+    private String category;
+    private String priority;
+    private java.time.LocalDateTime expiryDate;
+    private String attachmentUrl;
 }

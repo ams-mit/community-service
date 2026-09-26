@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local Data & Embedded DB ###
+data/
+*.db
+
+### UI (Frontend is kept out of backend repository) ###
+community-service-ui/
+AMS_REACT_PROJECT_STANDARDS.md
+AMS_UI_DESIGN_SYSTEM.md
+

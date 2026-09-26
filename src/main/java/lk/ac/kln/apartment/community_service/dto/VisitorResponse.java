@@ -19,7 +19,11 @@ public class VisitorResponse {
     private String unitId;
     private String purpose;
     private LocalDate visitDate;
+    private String visitorPhone;
+    private String vehicleNumber;
+    private String passCode;
     private VisitorStatus status;
     private LocalDateTime checkedInAt;
+    private LocalDateTime checkedOutAt;
     private LocalDateTime createdAt;
 }

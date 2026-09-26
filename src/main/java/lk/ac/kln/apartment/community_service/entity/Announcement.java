@@ -34,6 +34,16 @@ public class Announcement {
     @Column(nullable = false)
     private AnnouncementStatus status;
 
+    private String category;
+
+    private String priority;
+
+    @Column(name = "expiry_date")
+    private LocalDateTime expiryDate;
+
+    @Column(name = "attachment_url")
+    private String attachmentUrl;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

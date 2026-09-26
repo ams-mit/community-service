@@ -34,12 +34,24 @@ public class Visitor {
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate;
 
+    @Column(name = "visitor_phone")
+    private String visitorPhone;
+
+    @Column(name = "vehicle_number")
+    private String vehicleNumber;
+
+    @Column(name = "pass_code", unique = true)
+    private String passCode;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VisitorStatus status;
 
     @Column(name = "checked_in_at")
     private LocalDateTime checkedInAt;
+
+    @Column(name = "checked_out_at")
+    private LocalDateTime checkedOutAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
