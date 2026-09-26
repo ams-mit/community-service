@@ -26,4 +26,4 @@ COPY --from=builder /app/target/*.jar app.jar
 ENV PORT=8085
 EXPOSE 8085
 
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8085} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-postgres} -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8085} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-mysql} -jar app.jar"]

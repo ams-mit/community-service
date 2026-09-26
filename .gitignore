@@ -40,4 +40,7 @@ data/
 community-service-ui/
 AMS_REACT_PROJECT_STANDARDS.md
 AMS_UI_DESIGN_SYSTEM.md
-
+### Environment & Secrets ###
+.env
+.env.local
+*.env
