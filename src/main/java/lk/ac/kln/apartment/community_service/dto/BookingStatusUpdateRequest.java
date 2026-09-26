@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class BookingStatusUpdateRequest {
 
     private BookingStatus status;
+    private String rejectionReason;
 }

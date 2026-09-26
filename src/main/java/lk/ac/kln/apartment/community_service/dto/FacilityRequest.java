@@ -10,9 +10,8 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacilityResponse {
+public class FacilityRequest {
 
-    private Long id;
     private String name;
     private String type;
     private Integer capacity;

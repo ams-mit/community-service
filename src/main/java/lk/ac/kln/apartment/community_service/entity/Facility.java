@@ -38,4 +38,16 @@ public class Facility {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FacilityStatus status;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "rules_and_guidelines", length = 2000)
+    private String rulesAndGuidelines;
+
+    @Column(name = "booking_fee")
+    private Double bookingFee;
+
+    @Column(name = "max_hours_per_booking")
+    private Integer maxHoursPerBooking;
 }

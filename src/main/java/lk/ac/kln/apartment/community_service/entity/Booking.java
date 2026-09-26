@@ -28,6 +28,26 @@ public class Booking {
     @Column(name = "requester_role", nullable = false)
     private String requesterRole;
 
+    @Column(name = "requester_name")
+    private String requesterName;
+
+    @Column(name = "unit_id")
+    private String unitId;
+
+    private String purpose;
+
+    @Column(name = "attendee_count")
+    private Integer attendeeCount;
+
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
+    @Column(name = "booked_by_staff_id")
+    private String bookedByStaffId;
+
+    @Column(name = "booked_by_staff_name")
+    private String bookedByStaffName;
+
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 

@@ -1,229 +1,335 @@
 {
   "info": {
     "_postman_id": "c9c86d0e-dc9b-4279-bb2c-31dedb895996",
-    "name": "Community Service API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "56947109",
-    "_collection_link": "https://go.postman.co/collection/56947109-c9c86d0e-dc9b-4279-bb2c-31dedb895996?source=collection_link"
+    "name": "Community Service API — Canonical Complete Registry",
+    "description": "Postman Collection for Community Service covering all canonical endpoints (COMM-001 through COMM-012) according to project-a-canonical-complete-api-endpoint-registry.md",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Update Booking Status - Reject",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"status\": \"REJECTED\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Facilities & Reservations",
+      "item": [
+        {
+          "name": "COMM-001 - List Available Facilities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/api/v1/facilities",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "facilities"]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations/2/status",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations",
-            "2",
-            "status"
-          ]
+        {
+          "name": "COMM-002 - Create Facility Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facilityId\": 1,\n  \"startTime\": \"2026-09-30T10:00:00\",\n  \"endTime\": \"2026-09-30T12:00:00\",\n  \"requesterId\": \"resident-001\",\n  \"requesterRole\": \"RESIDENT\",\n  \"requesterName\": \"John Doe\",\n  \"unitId\": \"U-101\",\n  \"purpose\": \"Birthday Party\",\n  \"attendeeCount\": 15\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8085/api/v1/facilities/reservations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "facilities", "reservations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "COMM-003 - Update Reservation Status (Approve / Reject / Cancel)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"rejectionReason\": null\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8085/api/v1/facilities/reservations/1/status",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "facilities", "reservations", "1", "status"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Create Booking",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"facilityId\": 1,\r\n  \"startTime\": \"2026-09-21T14:00:00\",\r\n  \"endTime\": \"2026-09-21T16:00:00\",\r\n  \"requesterId\": \"resident-002\",\r\n  \"requesterRole\": \"RESIDENT\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Visitors",
+      "item": [
+        {
+          "name": "COMM-004 - Register Visitor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visitorName\": \"Robert Smith\",\n  \"residentId\": \"resident-001\",\n  \"unitId\": \"U-101\",\n  \"purpose\": \"Personal Visit\",\n  \"visitDate\": \"2026-09-30\",\n  \"visitorPhone\": \"+94771234567\",\n  \"vehicleNumber\": \"CAB-4589\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8085/api/v1/visitors",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "visitors"]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations"
-          ]
+        {
+          "name": "COMM-005 - Check Visitor In",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/api/v1/visitors/1/check-in",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "visitors", "1", "check-in"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Update Booking Status - Approve",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"status\": \"APPROVED\" }",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Announcements",
+      "item": [
+        {
+          "name": "COMM-006 - Publish Announcement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Elevator Maintenance Notice\",\n  \"content\": \"Routine hoistway maintenance scheduled for Friday from 9 AM to 12 PM.\",\n  \"targetRole\": \"ALL\",\n  \"publishedBy\": \"Apartment Management\",\n  \"category\": \"MAINTENANCE\",\n  \"priority\": \"HIGH\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8085/api/v1/announcements",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "announcements"]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations/1/status",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations",
-            "1",
-            "status"
-          ]
+        {
+          "name": "COMM-007 - List Visible Announcements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/api/v1/announcements?role=RESIDENT",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "announcements"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "RESIDENT"
+                }
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Update Booking Status",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{ \"status\": \"APPROVED\" }",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "COMM-008 - Create Workflow Notification (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{service_jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientId\": \"resident-001\",\n  \"recipientRole\": \"RESIDENT\",\n  \"title\": \"Water Pipeline Inspection Complete\",\n  \"summary\": \"Inspection of pressure valve on Floor 4 completed.\",\n  \"message\": \"The operations team has successfully restored normal water flow across all Tower A units.\",\n  \"type\": \"maintenance\",\n  \"category\": \"MAINTENANCE\",\n  \"priority\": \"normal\",\n  \"issuedBy\": \"Central Operations Division\",\n  \"affectedArea\": \"Tower A\",\n  \"actionRoute\": \"/announcements\",\n  \"actionLabel\": \"View Details\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8085/api/v1/notifications",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "notifications"]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations/1/status",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations",
-            "1",
-            "status"
-          ]
+        {
+          "name": "COMM-009 - List Current User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "resident-001"
+              },
+              {
+                "key": "X-User-Role",
+                "value": "RESIDENT"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/api/v1/notifications?recipientId=resident-001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "notifications"],
+              "query": [
+                {
+                  "key": "recipientId",
+                  "value": "resident-001"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "COMM-010 - Mark Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/api/v1/notifications/1/read",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["api", "v1", "notifications", "1", "read"]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Create Booking - Conflict Example",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"facilityId\": 1,\r\n  \"startTime\": \"2026-09-20T10:00:00\",\r\n  \"endTime\": \"2026-09-20T12:00:00\",\r\n  \"requesterId\": \"resident-001\",\r\n  \"requesterRole\": \"RESIDENT\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Actuator",
+      "item": [
+        {
+          "name": "COMM-011 - Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8085/actuator/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["actuator", "health"]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create Booking",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"facilityId\": 1,\r\n  \"startTime\": \"2026-09-20T10:00:00\",\r\n  \"endTime\": \"2026-09-20T12:00:00\",\r\n  \"requesterId\": \"resident-001\",\r\n  \"requesterRole\": \"RESIDENT\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "COMM-012 - Service Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8085/actuator/info",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8085",
+              "path": ["actuator", "info"]
             }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8085/api/v1/facilities/reservations",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8085",
-          "path": [
-            "api",
-            "v1",
-            "facilities",
-            "reservations"
-          ]
+          },
+          "response": []
         }
-      },
-      "response": []
-    },
-    {
-      "name": "Get All Facilities",
-      "request": {
-        "method": "GET",
-        "header": []
-      },
-      "response": []
+      ]
     }
   ]
 }
