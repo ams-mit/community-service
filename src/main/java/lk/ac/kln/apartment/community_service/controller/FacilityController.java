@@ -1,5 +1,6 @@
 package lk.ac.kln.apartment.community_service.controller;
 
+import jakarta.validation.Valid;
 import lk.ac.kln.apartment.community_service.dto.FacilityAvailabilityResponse;
 import lk.ac.kln.apartment.community_service.dto.FacilityRequest;
 import lk.ac.kln.apartment.community_service.dto.FacilityResponse;
@@ -36,12 +37,12 @@ public class FacilityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FacilityResponse createFacility(@RequestBody FacilityRequest request) {
+    public FacilityResponse createFacility(@Valid @RequestBody FacilityRequest request) {
         return facilityService.createFacility(request);
     }
 
     @PutMapping("/{id}")
-    public FacilityResponse updateFacility(@PathVariable Long id, @RequestBody FacilityRequest request) {
+    public FacilityResponse updateFacility(@PathVariable Long id, @Valid @RequestBody FacilityRequest request) {
         return facilityService.updateFacility(id, request);
     }
 
