@@ -8,11 +8,11 @@
 		<version>4.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>lk.ac.kln.apartment</groupId>
+	<groupId>kln.ams.community</groupId>
 	<artifactId>community-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>community-service</name>
+	<description>Project A Community Service</description>
 	<url/>
 	<licenses>
 		<license/>

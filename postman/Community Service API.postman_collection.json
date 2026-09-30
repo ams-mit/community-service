@@ -1,147 +1,221 @@
 {
   "info": {
-    "_postman_id": "c9c86d0e-dc9b-4279-bb2c-31dedb895996",
-    "name": "Community Service API — Canonical Complete Registry",
-    "description": "Postman Collection for Community Service covering all canonical endpoints (COMM-001 through COMM-012) according to project-a-canonical-complete-api-endpoint-registry.md",
+    "_postman_id": "c1f7869a-6241-4560-a25e-38321cb5e347",
+    "name": "Project A — Community Service API",
+    "description": "Comprehensive Postman test collection for Project A Community Service covering Visitors, Announcements, Notifications, and Internal Service APIs according to canonical contracts.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Facilities & Reservations",
-      "item": [
-        {
-          "name": "COMM-001 - List Available Facilities",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://localhost:8085/api/v1/facilities",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "facilities"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "COMM-002 - Create Facility Reservation",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"facilityId\": 1,\n  \"startTime\": \"2026-09-30T10:00:00\",\n  \"endTime\": \"2026-09-30T12:00:00\",\n  \"requesterId\": \"resident-001\",\n  \"requesterRole\": \"RESIDENT\",\n  \"requesterName\": \"John Doe\",\n  \"unitId\": \"U-101\",\n  \"purpose\": \"Birthday Party\",\n  \"attendeeCount\": 15\n}"
-            },
-            "url": {
-              "raw": "http://localhost:8085/api/v1/facilities/reservations",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "facilities", "reservations"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "COMM-003 - Update Reservation Status (Approve / Reject / Cancel)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"APPROVED\",\n  \"rejectionReason\": null\n}"
-            },
-            "url": {
-              "raw": "http://localhost:8085/api/v1/facilities/reservations/1/status",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "facilities", "reservations", "1", "status"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "Visitors",
       "item": [
         {
-          "name": "COMM-004 - Register Visitor",
+          "name": "COMM-VIS-001: Create Visitor Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "if (jsonData.data && jsonData.data.id) { pm.environment.set(\"visitorId\", jsonData.data.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"visitorName\": \"Robert Smith\",\n  \"residentId\": \"resident-001\",\n  \"unitId\": \"U-101\",\n  \"purpose\": \"Personal Visit\",\n  \"visitDate\": \"2026-09-30\",\n  \"visitorPhone\": \"+94771234567\",\n  \"vehicleNumber\": \"CAB-4589\"\n}"
+              "raw": "{\n  \"unitId\": \"{{unitId}}\",\n  \"visitorName\": \"Kasun Perera\",\n  \"visitorContact\": \"0771234567\",\n  \"visitDate\": \"2026-10-10\",\n  \"expectedArrival\": \"18:00\",\n  \"expectedDeparture\": \"20:00\",\n  \"purpose\": \"Family visit\",\n  \"notes\": \"Visitor will arrive by car\"\n}"
             },
-            "url": {
-              "raw": "http://localhost:8085/api/v1/visitors",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "visitors"]
-            }
-          },
-          "response": []
+            "url": { "raw": "{{base_url}}/api/v1/visitors", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors"] }
+          }
         },
         {
-          "name": "COMM-005 - Check Visitor In",
+          "name": "COMM-VIS-002: List Visitors",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "pm.test(\"Pagination exists\", function () { pm.expect(jsonData.pagination).to.be.an(\"object\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/visitors?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "visitors"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "COMM-VIS-003: Get Visitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}"] }
+          }
+        },
+        {
+          "name": "COMM-VIS-004: Update Visitor Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
-            "url": {
-              "raw": "http://localhost:8085/api/v1/visitors/1/check-in",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "visitors", "1", "check-in"]
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"purpose\": \"Updated family visit with dinner\",\n  \"notes\": \"Parking in guest bay 4\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}"] }
+          }
+        },
+        {
+          "name": "COMM-VIS-005: Approve Visitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is APPROVED\", function () { pm.expect(jsonData.data.status).to.eql(\"APPROVED\"); });"
+                ],
+                "type": "text/javascript"
+              }
             }
-          },
-          "response": []
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Resident verified and scheduled\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}/approve", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}", "approve"] }
+          }
+        },
+        {
+          "name": "COMM-VIS-006: Reject Visitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 409\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 400, 409]); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Visitor information could not be validated\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}/reject", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}", "reject"] }
+          }
+        },
+        {
+          "name": "COMM-VIS-007: Check In Visitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or conflict\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 409]); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}/check-in", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}", "check-in"] }
+          }
+        },
+        {
+          "name": "COMM-VIS-008: Check Out Visitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or conflict\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 409]); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/visitors/{{visitorId}}/check-out", "host": ["{{base_url}}"], "path": ["api", "v1", "visitors", "{{visitorId}}", "check-out"] }
+          }
         }
       ]
     },
@@ -149,60 +223,213 @@
       "name": "Announcements",
       "item": [
         {
-          "name": "COMM-006 - Publish Announcement",
+          "name": "COMM-ANN-001: Create Announcement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "pm.test(\"Default status is DRAFT\", function () { pm.expect(jsonData.data.status).to.eql(\"DRAFT\"); });",
+                  "if (jsonData.data && jsonData.data.id) { pm.environment.set(\"announcementId\", jsonData.data.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Elevator Maintenance Notice\",\n  \"content\": \"Routine hoistway maintenance scheduled for Friday from 9 AM to 12 PM.\",\n  \"targetRole\": \"ALL\",\n  \"publishedBy\": \"Apartment Management\",\n  \"category\": \"MAINTENANCE\",\n  \"priority\": \"HIGH\"\n}"
+              "raw": "{\n  \"title\": \"Water Supply Maintenance\",\n  \"content\": \"Water supply will be interrupted from 10:00 to 12:00.\",\n  \"category\": \"MAINTENANCE\",\n  \"priority\": \"HIGH\",\n  \"audienceType\": \"ALL_RESIDENTS\",\n  \"expiresAt\": \"2026-10-15T23:59:59Z\"\n}"
             },
-            "url": {
-              "raw": "http://localhost:8085/api/v1/announcements",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "announcements"]
-            }
-          },
-          "response": []
+            "url": { "raw": "{{base_url}}/api/v1/announcements", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements"] }
+          }
         },
         {
-          "name": "COMM-007 - List Visible Announcements",
+          "name": "COMM-ANN-002: List Announcements",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:8085/api/v1/announcements?role=RESIDENT",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
+              "raw": "{{base_url}}/api/v1/announcements?page=0&size=20",
+              "host": ["{{base_url}}"],
               "path": ["api", "v1", "announcements"],
               "query": [
-                {
-                  "key": "role",
-                  "value": "RESIDENT"
-                }
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
               ]
             }
-          },
-          "response": []
+          }
+        },
+        {
+          "name": "COMM-ANN-003: Get Announcement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}"] }
+          }
+        },
+        {
+          "name": "COMM-ANN-004: Update Announcement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Water Supply Maintenance (Updated)\",\n  \"priority\": \"URGENT\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}"] }
+          }
+        },
+        {
+          "name": "COMM-ANN-005: Publish Announcement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is PUBLISHED\", function () { pm.expect(jsonData.data.status).to.eql(\"PUBLISHED\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}/publish", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}", "publish"] }
+          }
+        },
+        {
+          "name": "COMM-ANN-006: Cancel Announcement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is CANCELLED\", function () { pm.expect(jsonData.data.status).to.eql(\"CANCELLED\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Maintenance schedule postponed\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}/cancel", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}", "cancel"] }
+          }
+        },
+        {
+          "name": "COMM-ANN-007: Mark Announcement Read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}/read", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}", "read"] }
+          }
+        },
+        {
+          "name": "COMM-ANN-008: Announcement Audience Preview",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Eligible recipient count exists\", function () { pm.expect(jsonData.data.eligibleRecipientCount).to.be.a(\"number\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/announcements/{{announcementId}}/audience-preview", "host": ["{{base_url}}"], "path": ["api", "v1", "announcements", "{{announcementId}}", "audience-preview"] }
+          }
         }
       ]
     },
@@ -210,124 +437,334 @@
       "name": "Notifications",
       "item": [
         {
-          "name": "COMM-008 - Create Workflow Notification (Internal)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{service_jwt_token}}",
-                "type": "text"
+          "name": "COMM-NOT-001: List My Notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "if (jsonData.data && jsonData.data.length > 0) { pm.environment.set(\"notificationId\", jsonData.data[0].id); }"
+                ],
+                "type": "text/javascript"
               }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"recipientId\": \"resident-001\",\n  \"recipientRole\": \"RESIDENT\",\n  \"title\": \"Water Pipeline Inspection Complete\",\n  \"summary\": \"Inspection of pressure valve on Floor 4 completed.\",\n  \"message\": \"The operations team has successfully restored normal water flow across all Tower A units.\",\n  \"type\": \"maintenance\",\n  \"category\": \"MAINTENANCE\",\n  \"priority\": \"normal\",\n  \"issuedBy\": \"Central Operations Division\",\n  \"affectedArea\": \"Tower A\",\n  \"actionRoute\": \"/announcements\",\n  \"actionLabel\": \"View Details\"\n}"
-            },
-            "url": {
-              "raw": "http://localhost:8085/api/v1/notifications",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "notifications"]
             }
-          },
-          "response": []
-        },
-        {
-          "name": "COMM-009 - List Current User Notifications",
+          ],
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
-              },
-              {
-                "key": "X-User-Id",
-                "value": "resident-001"
-              },
-              {
-                "key": "X-User-Role",
-                "value": "RESIDENT"
-              }
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:8085/api/v1/notifications?recipientId=resident-001",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
+              "raw": "{{base_url}}/api/v1/notifications?page=0&size=20",
+              "host": ["{{base_url}}"],
               "path": ["api", "v1", "notifications"],
               "query": [
-                {
-                  "key": "recipientId",
-                  "value": "resident-001"
-                }
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
               ]
             }
-          },
-          "response": []
+          }
         },
         {
-          "name": "COMM-010 - Mark Notification as Read",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}",
-                "type": "text"
+          "name": "COMM-NOT-002: Get Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
               }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/notifications/{{notificationId}}", "host": ["{{base_url}}"], "path": ["api", "v1", "notifications", "{{notificationId}}"] }
+          }
+        },
+        {
+          "name": "COMM-NOT-003: Mark Notification Read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is READ\", function () { pm.expect(jsonData.data.status).to.eql(\"READ\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/notifications/{{notificationId}}/read", "host": ["{{base_url}}"], "path": ["api", "v1", "notifications", "{{notificationId}}", "read"] }
+          }
+        },
+        {
+          "name": "COMM-NOT-004: Mark All Notifications Read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Updated count is returned\", function () { pm.expect(jsonData.data.updatedCount).to.be.a(\"number\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/notifications/read-all", "host": ["{{base_url}}"], "path": ["api", "v1", "notifications", "read-all"] }
+          }
+        },
+        {
+          "name": "COMM-NOT-005: Notification Summary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Counts exist\", function () { pm.expect(jsonData.data.unreadCount).to.be.a(\"number\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/notifications/summary", "host": ["{{base_url}}"], "path": ["api", "v1", "notifications", "summary"] }
+          }
+        },
+        {
+          "name": "COMM-NOT-006: Notification History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
             ],
             "url": {
-              "raw": "http://localhost:8085/api/v1/notifications/1/read",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["api", "v1", "notifications", "1", "read"]
+              "raw": "{{base_url}}/api/v1/notifications/history?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notifications", "history"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
             }
-          },
-          "response": []
+          }
+        },
+        {
+          "name": "COMM-NOT-007: Archive Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is ARCHIVED\", function () { pm.expect(jsonData.data.status).to.eql(\"ARCHIVED\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/notifications/{{notificationId}}/archive", "host": ["{{base_url}}"], "path": ["api", "v1", "notifications", "{{notificationId}}", "archive"] }
+          }
         }
       ]
     },
     {
-      "name": "Actuator",
+      "name": "Internal Notifications",
       "item": [
         {
-          "name": "COMM-011 - Service Health",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:8085/actuator/health",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["actuator", "health"]
+          "name": "COMM-INT-001: Create Notification (Internal)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "if (jsonData.data && jsonData.data.id) { pm.environment.set(\"notificationId\", jsonData.data.id); }"
+                ],
+                "type": "text/javascript"
+              }
             }
-          },
-          "response": []
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{service_jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientUserId\": \"{{residentUserId}}\",\n  \"type\": \"BOOKING_APPROVED\",\n  \"title\": \"Facility Booking Approved\",\n  \"message\": \"Your community hall reservation has been approved.\",\n  \"priority\": \"NORMAL\",\n  \"sourceService\": \"operations-service\",\n  \"sourceEntityType\": \"Booking\",\n  \"sourceEntityId\": \"bkg-uuid-001\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/internal/notifications", "host": ["{{base_url}}"], "path": ["api", "v1", "internal", "notifications"] }
+          }
         },
         {
-          "name": "COMM-012 - Service Info",
+          "name": "COMM-INT-002: Notification Status (Internal)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });",
+                  "pm.test(\"Delivery status is DELIVERED\", function () { pm.expect(jsonData.data.deliveryStatus).to.eql(\"DELIVERED\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{service_jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/v1/internal/notifications/{{notificationId}}/status", "host": ["{{base_url}}"], "path": ["api", "v1", "internal", "notifications", "{{notificationId}}", "status"] }
+          }
+        },
+        {
+          "name": "COMM-INT-003: Resident Notification Request (Internal)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Success is true\", function () { pm.expect(jsonData.success).to.eql(true); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{service_jwt_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"residentUserId\": \"{{residentUserId}}\",\n  \"type\": \"MAINTENANCE_REQUEST_UPDATED\",\n  \"title\": \"Maintenance Request In Progress\",\n  \"message\": \"Technician has been assigned to your request.\",\n  \"priority\": \"NORMAL\",\n  \"sourceService\": \"operations-service\",\n  \"sourceEntityType\": \"MaintenanceRequest\",\n  \"sourceEntityId\": \"mr-uuid-001\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/v1/internal/notifications/resident", "host": ["{{base_url}}"], "path": ["api", "v1", "internal", "notifications", "resident"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Operational & System",
+      "item": [
+        {
+          "name": "COMM-OPS-001: Actuator Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is UP\", function () { pm.expect(jsonData.status).to.eql(\"UP\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
-            "url": {
-              "raw": "http://localhost:8085/actuator/info",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8085",
-              "path": ["actuator", "info"]
+            "url": { "raw": "{{base_url}}/actuator/health", "host": ["{{base_url}}"], "path": ["actuator", "health"] }
+          }
+        },
+        {
+          "name": "COMM-OPS-002: Actuator Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
             }
-          },
-          "response": []
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/actuator/info", "host": ["{{base_url}}"], "path": ["actuator", "info"] }
+          }
+        },
+        {
+          "name": "Root Home Service Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Status is ONLINE\", function () { pm.expect(jsonData.status).to.eql(\"ONLINE\"); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""] }
+          }
         }
       ]
     }

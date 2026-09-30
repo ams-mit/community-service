@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: community-db
     environment:
-      MYSQL_DATABASE: community_service_db
+      MYSQL_DATABASE: community_db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3308:3306"
@@ -22,7 +22,7 @@ services:
     container_name: community-service
     environment:
       SPRING_PROFILES_ACTIVE: mysql
-      SPRING_DATASOURCE_URL: jdbc:mysql://community-db:3306/community_service_db
+      SPRING_DATASOURCE_URL: jdbc:mysql://community-db:3306/community_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
